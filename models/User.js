@@ -7,7 +7,7 @@ const userSchema = mongoose.Schema({
     email: {
         type: String,
         trim: true,
-        unique: 1,
+        unique: 1, //똑같은 이메일을 쓸 수 없도록 설정
     },
     password: {
         type: String,
