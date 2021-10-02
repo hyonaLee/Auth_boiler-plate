@@ -2,6 +2,7 @@ const express = require('express');
 const app = express();
 const port = 5000
 const bodyParser = require('body-parser');
+const config = require('./config/key');
 const { User } = require("./models/User");
 
 
@@ -9,7 +10,7 @@ app.use(express.urlencoded({extended: false}));
 app.use(express.json());  
 
 const mongoose = require('mongoose');
-mongoose.connect('mongodb+srv://hyunhaLee:hyun9332!!@boilerplate.eaxo9.mongodb.net/myFirstDatabase?retryWrites=true&w=majority', {
+mongoose.connect(config.mongoURI, { 
 }).then(() => console.log('mongoDB Connected....'))
   .catch(err => console.log(err))
 
@@ -17,7 +18,7 @@ mongoose.connect('mongodb+srv://hyunhaLee:hyun9332!!@boilerplate.eaxo9.mongodb.n
 
 
 app.get('/', (req, res) => {
-  res.send('Hello World~~~')
+  res.send('Hello world!!!')
 })
 
 
