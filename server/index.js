@@ -1,11 +1,10 @@
 const express = require('express');
 const app = express();
-const port = 5000
 const bodyParser = require('body-parser');
 const cookieParser = require('cookie-parser');
-const config = require('./config/key');
-const { User } = require("./models/User");
-const { auth } = require("./middleware/auth");
+const config = require('../server/config/key');
+const { User } = require("../server/models/User");
+const { auth } = require("../server/middleware/auth");
 
 
 app.use(express.urlencoded({extended: true})); 
@@ -18,9 +17,9 @@ mongoose.connect(config.mongoURI, {
 }).then(() => console.log('mongoDB Connected....'))
   .catch(err => console.log(err))
 
-app.get('/', (req, res) => {
-  res.send('Hello world!!!')
-})
+app.get('/', (req, res) => res.send('Hello world!!!'))
+
+app.get('/api/hello', (req, res) => res.send("할로"))
 
 app.post('/api/users/register', (req, res) => {
 
@@ -82,5 +81,6 @@ res.status(200).json({
 })
 
 
+const port = 5000
 
 app.listen(port, () => console.log(`Example app listening at http://localhost:${port}`))
