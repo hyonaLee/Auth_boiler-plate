@@ -1,18 +1,27 @@
 import React, { useEffect } from 'react'
 import axios from 'axios';
-import Btn from './Btn';
 
-function LandingPage() {
+function LandingPage(props) {
 
     useEffect(() => {
         axios.get('/api/hello')
         .then(response => {console.log(response)})
     }, [])
 
+    const onClickLogout = ()=> {
+        axios.get('/api/users/logout')
+        .then(response => {
+            if(response.data.success){
+                props.history.push("/login")
+            }else{
+                alert("로그아웃실패")
+            }
+        })
+    }
     return (
-        <div>
-            LandingPage
-            <Btn/>
+        <div style={{display:'flex',justifyContent:'center',alignItems:'center',width:'100%',height:'100vh'}}>
+            <h2>LandingPage</h2>
+            <button onClick={onClickLogout}>로그아웃</button>
         </div>
     )
 }

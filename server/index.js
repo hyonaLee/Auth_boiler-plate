@@ -28,7 +28,7 @@ app.post('/api/users/register', (req, res) => {
 
   const user = new User(req.body)
 
-  user.save((err,user) => {
+  user.save((err,userInfo) => {
     if(err) return res.json({ success: false, err })
     return res.status(200).json({
       success: true
@@ -78,6 +78,17 @@ res.status(200).json({
   role: req.user.role,
   image: req.user.image,
 })
+})
+
+app.get('/api/users/logout', auth, (req,res) => {
+  User.findOneAndUpdate({_id: req.user._id},
+    {token:""},
+    (err, user) => {
+      if(err) return res.json({success:false, err});
+      return res.status(200).send({
+        success:ture
+      })
+    })
 })
 
 
