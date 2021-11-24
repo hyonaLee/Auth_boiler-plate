@@ -1,9 +1,12 @@
 import React, { useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { registerUser } from '../../../_actions/user_action'
+import { useNavigate } from "react-router-dom"
+
 
 function RegisterPage(props) {
     const dispatch = useDispatch();
+    const navigate = useNavigate();
 
     const [Email, setEmail] = useState("")
     const [Name, setName] = useState("")
@@ -35,21 +38,20 @@ function RegisterPage(props) {
         }
 
         dispatch(registerUser(body))
-            .then(response => {
-                if (response.payload.success) {
-                    props.history.push("/login")
-                } else {
-                    alert("가입실패")
-                }
-            })
-            // .then((response) => {
-            //         alert("회원가입성공")
-            //         props.history.push('/')
+            // .then(response => {
+            //     if (response.payload.success) {
+            //     navigate("/login");
+            //     } else {
+            //         alert("가입실패")
+            //     }
             // })
-            // .catch((err) => {
-            //         alert("회원가입실패")
-            //     })
-
+            .then((response) => {
+                    alert("회원가입성공")
+                    navigate("/login");
+            })
+            .catch((err) => {
+                    alert("회원가입실패")
+                })
     }
 
     return (
