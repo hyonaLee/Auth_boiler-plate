@@ -1,24 +1,29 @@
 const express = require("express");
 const app = express();
-const bodyParser = require("body-parser");
+// const bodyParser = require("body-parser");
 const cookieParser = require("cookie-parser");
-const config = require("../server/config/key");
-const { User } = require("../server/models/User");
-const { auth } = require("../server/middleware/auth");
+const config = require("./config/key");
+const { User } = require("./models/User");
+const { auth } = require("./middleware/auth");
 
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 app.use(cookieParser());
 
 const mongoose = require("mongoose");
-mongoose
-  .connect(config.mongoURI, {})
+  mongoose
+  .connect(config.mongoURI, {
+    // userNewUrlParser: true, 
+    useUnifiedTopology:true, 
+    // useCreateIndex:true, 
+    // useFindAndModify:false
+  })
   .then(() => console.log("mongoDB Connected...."))
   .catch((err) => console.log(err));
 
 app.get("/", (req, res) => res.send("Hello world!!!"));
 
-app.get("/api/hello", (req, res) => res.send("할로"));
+app.get("/api/hello", (req, res) => res.send("HELLO"));
 
 app.post("/api/users/register", (req, res) => {
   //회원가입 시 필요한 정보들을 client에서 가져오면
@@ -44,32 +49,29 @@ app.post("/api/users/login", (req, res) => {
         message: "제공된 이메일에 해당하는 유저가 없습니다.",
       });
     }
-
-    user.comparePassword(req.body.password, (err, isMatch) => {
-      console.log("test", req.body.password);
-      if (!isMatch) {
-        return res.json({
-          loginSuccess: false,
-          message: "비밀번호가 틀렸습니다.",
-        });
-      } else {
-        //비밀번호도 맞는게 확인되면 토큰 생성
-        user.createToken((err, user) => {
-          if (err) return res.status(400).send(err);
-
+  //이메일이 맞다면 비밀번호가 맞는지 확인
+  user.comparePassword(req.body.password, (err, isMatch) => {
+    console.log("test", req.body.password);
+    if (!isMatch)
+      return res.json({
+        loginSuccess: false,
+        message: "비밀번호가 틀렸습니다.",
+      });
+      //비밀번호도 맞는게 확인되면 토큰 생성
+      user.generateToken((err, user) => {
+        if (err) return res.status(400).send(err);
           //쿠키에 토큰 저장
           res
             .cookie("x_auth", user.token)
             .status(200)
-            .json({ loginSuccess: true, userID: user._id });
+            .json({ loginSuccess: true, userId: user._id });
         });
-      }
     });
   });
 });
 
 // role 1 어드민 / role 2 특정 부서 어드민
-//role 0 일반유저 role 0이 아니면 관리자
+// role 0 일반유저 role 0이 아니면 관리자
 app.get("/api/users/auth", auth, (req, res) => {
   //여기까지 미들웨어를 통과해 왔다는 말은 Authentication이 true라는 말.
   res.status(200).json({
@@ -78,7 +80,6 @@ app.get("/api/users/auth", auth, (req, res) => {
     isAuth: true,
     email: req.user.email,
     name: req.user.name,
-    lastname: req.user.lastname,
     role: req.user.role,
     image: req.user.image,
   });
