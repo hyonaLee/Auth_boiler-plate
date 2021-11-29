@@ -19,7 +19,7 @@ const mongoose = require("mongoose");
     // useFindAndModify:false
   })
   .then(() => console.log("mongoDB Connected...."))
-  .catch((err) => console.log(err));
+  .catch((err) => console.log("mongoDB Connect err!!",err));
 
 app.get("/", (req, res) => res.send("Hello world!!!"));
 
@@ -51,7 +51,6 @@ app.post("/api/users/login", (req, res) => {
     }
   //이메일이 맞다면 비밀번호가 맞는지 확인
   user.comparePassword(req.body.password, (err, isMatch) => {
-    console.log("test", req.body.password);
     if (!isMatch)
       return res.json({
         loginSuccess: false,
@@ -70,6 +69,19 @@ app.post("/api/users/login", (req, res) => {
   });
 });
 
+
+app.get('/api/users/logout', auth, (req, res) => {
+  console.log('logout req.user', req.user)
+  User.findOneAndUpdate({ _id: req.user._id },
+    { token: "" }
+    , (err, user) => {
+      if (err) return res.json({ success: false, err });
+      return res.status(200).send({
+        success: true
+      })
+    })
+})
+
 // role 1 어드민 / role 2 특정 부서 어드민
 // role 0 일반유저 role 0이 아니면 관리자
 app.get("/api/users/auth", auth, (req, res) => {
@@ -85,17 +97,8 @@ app.get("/api/users/auth", auth, (req, res) => {
   });
 });
 
-app.get("/api/users/logout", auth, (req, res) => {
-  User.findOneAndUpdate({ _id: req.user._id }, { token: "" }, (err, user) => {
-    if (err) return res.json({ success: false, err });
-    return res.status(200).send({
-      success: ture,
-    });
-  });
-});
 
 const port = 5000;
 
 app.listen(port, () =>
-  console.log(`Example app listening at http://localhost:${port}`)
-);
+  console.log(`Example app listening at http://localhost:${port}`));

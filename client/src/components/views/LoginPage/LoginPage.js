@@ -35,7 +35,7 @@ function LoginPage(props) {
     //   }
     // });
       .then((response) => {
-        console.log(response.payload.loginSuccess)
+        console.log(response.payload)
         alert("로그인성공")
         navigate("/");
       })

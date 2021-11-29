@@ -46,6 +46,7 @@ function RegisterPage(props) {
             //     }
             // })
             .then((response) => {
+                    console.log(response.payload)
                     alert("회원가입성공")
                     navigate("/login");
             })
