@@ -11,15 +11,15 @@ function LandingPage(props) {
   dispatch(auth()).then((response) => {
     setisAuth(response.payload.isAuth);
   });
-  console.log(isAuth);
+  console.log("isAuth", isAuth);
 
   const navigate = useNavigate();
 
-  useEffect(() => {
-    axios.get("/api/hello").then((response) => {
-      console.log(response);
-    });
-  }, []);
+  // useEffect(() => {
+  //   axios.get("/api/hello").then((response) => {
+  //     console.log(response);
+  //   });
+  // }, []);
 
   const onClickLogout = () => {
     axios.get("/api/users/logout").then((response) => {
@@ -50,9 +50,14 @@ function LandingPage(props) {
           </Link>
         </>
       ) : (
+        <>
         <Link to="/login">
           <button>로그인</button>
         </Link>
+        <Link to="/register">
+        <button>회원가입</button>
+        </Link>
+        </>
       )}
     </div>
   );

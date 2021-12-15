@@ -25,25 +25,14 @@ function LoginPage(props) {
     };
 
     dispatch(loginUser(body))
-    // .then((response) => {
-    //   console.log("돌아온 값(body)", response);
-    //   if (response.payload.loginSuccess) {
-    //     console.log("안녕하세요");
-    //     navigate("/");
-    //   } else {
-    //     alert("error");
-    //   }
-    // });
-      .then((response) => {
-        console.log(response.payload)
-        alert("로그인성공")
+    .then((response) => {
+      if (response.payload.loginSuccess) {
+        alert("로그인성공");
         navigate("/");
-      })
-      .catch((err) => {
-        console.log(err)
-        alert("로그인실패")
-      })
-
+      } else {
+        alert("로그인실패");
+      }
+    });
   };
 
   return (

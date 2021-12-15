@@ -31,29 +31,26 @@ function RegisterPage(props) {
         if(Password !== ConfirmPassword) {
             return alert('비밀번호와 비밀번호확인은 같아야합니다.')
         }
+        if(Password.length < 4) {
+            return alert('비밀번호는 4글자 이상이여야 합니다.')
+        }
         let body = {
             email: Email,
             password: Password,
             name: Name
         }
-
+        // console.log(body)
         dispatch(registerUser(body))
-            // .then(response => {
-            //     if (response.payload.success) {
-            //     navigate("/login");
-            //     } else {
-            //         alert("가입실패")
-            //     }
-            // })
-            .then((response) => {
-                    console.log(response.payload)
-                    alert("회원가입성공")
-                    navigate("/login");
-            })
-            .catch((err) => {
-                    alert("회원가입실패")
-                })
-    }
+        .then((response) => {
+            // console.log(response.payload.success)
+            if (response.payload.success) {
+              alert("회원가입성공");
+              navigate("/login");
+            } else {
+              alert("회원가입실패");
+            }
+          });
+    };
 
     return (
         <div style={{display:'flex',justifyContent:'center',alignItems:'center',width:'100%',height:'100vh'}}

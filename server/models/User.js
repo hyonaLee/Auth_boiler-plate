@@ -16,7 +16,7 @@ const userSchema = mongoose.Schema({
     },
     password: {
         type: String,
-        minlength: 5
+        minlength: 4
     },
     role: {
         type: Number,
@@ -27,7 +27,7 @@ const userSchema = mongoose.Schema({
         type: String
     },
     tokenExp: {
-        type: Number
+        type: String
     }
 })
 
